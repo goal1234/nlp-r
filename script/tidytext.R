@@ -8,6 +8,7 @@ book_words <- austen_books() %>%
   unnest_tokens(word, text) %>%
   count(book, word, sort = TRUE) %>%
   ungroup()
+
 book_words
 # find the words most distinctive to each document
 book_words %>%
