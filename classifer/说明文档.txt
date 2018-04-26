@@ -1,0 +1,103 @@
+# 有监督的训练学习
+
+通过训练corpus文件夹下面的语料然后保存模型和标签，用于相关领域的预测。在往corpus里面加如语料文件夹名为标签，里面放入每条txt进行一个训练。
+主要是用tfidf转化，所以相关的语料应该相似的场景下才较为合适。
+
+
+
+
+## 使用
+
+model_predict.py ---------->修改读入的数据，载入，预测
+model_train.py ------------>选择对应的语料，转化，训练并保存相关
+--------------------------->对应的工具
+    sa_corpus.py 
+    sa_fc.py
+    sa_transform.py
+    sa_evalute.py
+    sa_model.py
+    sa_tools.py
+
+
+## 相关库依赖
+
+除了Python内置的库外还依赖
+jieba    0.39
+sklearn  0.19.1
+
+
+## 目录结构:
+    corpus
+    |____ch
+         |____neg_pos
+         |____Reduced  
+    data_input
+    |____xlsx
+    model
+    |____labels
+    |......
+    predict
+    |......
+    evalute
+    |......
+
+
+corpus      存放了训练用的语料，ch为中文,neg_pos为一个语料库，Reduced为一个语料库
+data_input  是输入的需要预测的数据,
+model       保存了训练好的模型,转化器，在下面的labels保存了对应
+predict     预测结果保存csv格式
+evalute     对不同分类器评价
+
+
+## 相关的功能描述
+
+model_predict 进行模型预测
+    - 用训练好的模型进行预测的实例
+    1. 读入数据，进行预处理
+    2. 加载转化器， 分类器，还有对应需要还原的标签
+    3. 数据转化
+    4. 模型预测
+    5. 标签还原在输入中有对应的标签
+    6. 输出保存
+
+model_train   模型训练
+    - 训练同时保存模型的例子
+    1. 载入需要的语料， 语料被设定为，文件夹名为标签里面都是txt的形式
+    2. 给上标签
+    3. 数据集分隔,固定的80:20的形式
+    4. 训练模型
+    5. 保存模型评价结果
+    6. 保存需要的模型,转化器,标签
+
+
+sa_corpus    读入语料
+    - path_read(path)        读入路径下的语料,其中标签为文件夹名，内容为在txt里面
+
+sa_evalute   模型评价
+    - evalute(...)           输入真实标签还有预测标签进行评估
+
+sa_fc        分词停词处理
+    - label()                获取读入语料后的标签每个语料对应一个1,2,3,.类的标签
+    - gather()               返回一个分词后的list语料
+    - label_name()           得到语料的标签，corpus路径下的名词将变为
+
+sa_model     转化器，模型保存
+    - model_save()           训练后的模型保存,默认路径在model下，需要较好命名方便后面加载
+    - model_load()           模型加载
+    - clf_nb()               贝叶斯分类器：最常用的需要标签和预测的数据较为符合
+    - clf_svm()              支持向量机： 需要进行调参
+    - clf_sgd()              线性的随机梯度
+    - clf_dt()               决策数id3： 稳定性较差
+    - clf_gbdt()             极限梯度树： 百万级才用，太少也不行
+    - clf_knn()              k临近
+
+sa_tools     保存训练标签的,加载训练标签
+    - store_label()          保存训练的标签，预测之后进行标签还原，其中标签的个数应该和预测
+                             的类别应该有较好的对应。
+    - load_label()           加载模型标签
+    - pred_store()           写出预测格式为csv
+
+sa_transform 训练时用的转化
+    - tfidf_trans()          分词之后tfidf转化，输出了转化器需要保存
+    - split_train_test()     list中储蓄的分词，对应的标签
+    - name_label()           将标签的list进行还原如：1->pos, 2->neg
